@@ -1,0 +1,20 @@
+openapi: 3.0.0
+info:
+  title: Cti
+  version: '1.0'
+servers:
+  - url: 'https://d37cccx4glnt6p.cloudfront.net/api/'
+    description: 開発環境
+  - url: 'http://admin.p-escort.com/api/'
+    description: 本番環境
+paths: {}
+components:
+  schemas: {}
+  securitySchemes:
+    Authorization:
+      type: http
+      scheme: bearer
+      description: 認証キー
+    Auth-timestamp:
+      type: http
+      scheme: hoba
