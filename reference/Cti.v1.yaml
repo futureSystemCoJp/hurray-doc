@@ -1,13 +1,57 @@
 openapi: 3.0.0
 info:
-  title: Cti
+  title: CMS
   version: '1.0'
+  description: |-
+    # 認証方法
+
+    双方で共有鍵Aを保持する。
+    リクエスト時点のUNIXタイムスタンプをBとする。
+
+    AとBを結合した文字列をSHA2でハッシュ化した値をCとする。
+
+    HTTPリクエストにAuthorizationヘッダーを付加して、Cを値とする。
+    HTTPリクエストに Request-Time ヘッダーを付加して、Bを値とする。
+
+    共有鍵とRequest-Time ヘッダーからCを作成して一致するか検証する。
+    Request-Time ヘッダーがサーバー現在時刻から10秒以上経過している場合は、偽とする。
+
+    ### 共有鍵A
+    39UFCsDYJGV9sTzPy9yo
 servers:
-  - url: 'https://d37cccx4glnt6p.cloudfront.net/api/'
+  - url: 'https://d37cccx4glnt6p.cloudfront.net/api'
     description: 開発環境
-  - url: 'http://admin.p-escort.com/api/'
+  - url: 'http://admin.p-escort.com/api'
     description: 本番環境
-paths: {}
+paths:
+  /member/:
+    get:
+      summary: 会員照会API
+      tags:
+        - API
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  memberCode:
+                    type: string
+                    description: 会員ID（CMS側）
+                required:
+                  - memberCode
+        '404':
+          description: 会員が存在しない場合
+      operationId: get-member
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: phoneNumber
+          description: 電話番号or会員ID
+          required: true
 components:
   schemas: {}
   securitySchemes:
@@ -15,6 +59,7 @@ components:
       type: http
       scheme: bearer
       description: 認証キー
-    Auth-timestamp:
+    Request-Time:
       type: http
-      scheme: hoba
+      scheme: bearer
+      description: リクエスト送信時点のUNIXタイムスタンプ
